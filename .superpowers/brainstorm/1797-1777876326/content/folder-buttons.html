@@ -1,0 +1,307 @@
+<style>
+  .demo-sidebar {
+    width: 288px;
+    background: #1a1612;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #3a2e22;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  .demo-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #a86d2c;
+    padding: 8px 12px 4px;
+    border-bottom: 1px solid #2a2018;
+    font-family: 'DM Mono', monospace;
+  }
+  .folder-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #1e1a15;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 1px solid #2a2018;
+    min-width: 0;
+  }
+  .folder-row:last-child { border-bottom: none; }
+  .folder-row:hover { background: #252017; }
+  .folder-icon {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    fill: #a86d2c;
+  }
+  .folder-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e8d5b0;
+    margin-left: 8px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  .folder-name.truncated { color: #c0a060; }
+  .right-area {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    margin-left: 6px;
+  }
+  .badge {
+    font-size: 10px; font-weight: 700;
+    background: rgba(168,109,44,0.2); color: #a86d2c;
+    border-radius: 99px; padding: 1px 7px;
+    font-family: 'DM Mono', monospace;
+  }
+  .icon-btn {
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #8a7860;
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    transition: all .15s;
+  }
+  .icon-btn:hover { background: rgba(168,109,44,0.15); color: #a86d2c; }
+  .icon-btn.danger:hover { background: rgba(200,60,50,0.15); color: #e05545; }
+  .icon-btn.active { color: #6dbf8a; }
+  .icon-btn svg { width: 13px; height: 13px; }
+  .chevron { color: #5a5040; }
+  .chevron svg { width: 12px; height: 12px; }
+
+  /* Dropdown mock */
+  .dropdown-mock {
+    position: absolute;
+    right: 8px;
+    top: 34px;
+    background: #2a2318;
+    border: 1px solid #3a2e22;
+    border-radius: 8px;
+    padding: 4px;
+    z-index: 10;
+    width: 140px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #c0a870;
+    cursor: pointer;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  .dropdown-item:hover { background: rgba(168,109,44,0.12); }
+  .dropdown-item.danger { color: #e05545; }
+  .dropdown-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .dropdown-divider { height: 1px; background: #3a2e22; margin: 3px 0; }
+
+  /* Context menu mock */
+  .ctx-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 700;
+    background: rgba(109,191,138,0.15); color: #6dbf8a;
+    border-radius: 4px; padding: 1px 5px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .04em;
+  }
+  .hover-hint {
+    font-size: 10px; color: #5a5040; font-style: italic;
+    padding: 4px 12px 6px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  .problem-arrow {
+    display: flex; align-items: center; justify-content: center;
+    margin: 6px 0;
+    font-size: 11px; color: #e05545; font-weight: 600;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .05em;
+  }
+  .truncation-highlight {
+    background: rgba(200,60,50,0.12);
+    border-radius: 4px;
+    outline: 1px dashed rgba(200,60,50,0.4);
+  }
+</style>
+
+<h2>資料夾按鈕整合方案</h2>
+<p class="subtitle">目前側邊欄寬度只有 288px，hover 時出現最多 5 個按鈕，導致資料夾名稱被截斷。請選擇偏好的方向。</p>
+
+<div class="section">
+  <h3 style="margin-bottom:8px; font-size:13px; color:#e05545; letter-spacing:.05em;">目前問題 — hover 時按鈕過多</h3>
+  <div class="demo-sidebar">
+    <div class="demo-label">資料夾（現況）</div>
+    <div class="folder-row">
+      <svg class="folder-icon" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="8" width="20" height="12" rx="2" fill="#a86d2c"/>
+        <path d="M2 8a2 2 0 0 1 2-2h4.17a2 2 0 0 1 1.42.59L11 8H2Z" fill="#a86d2c" opacity=".75"/>
+      </svg>
+      <span class="folder-name truncated truncation-highlight">深度學習研究論文</span>
+      <div class="right-area">
+        <span class="badge">5</span>
+        <button class="icon-btn active" title="公開">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918"/></svg>
+        </button>
+        <button class="icon-btn" title="分享">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/></svg>
+        </button>
+        <button class="icon-btn" title="重新命名">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Z"/></svg>
+        </button>
+        <button class="icon-btn danger" title="刪除">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916"/></svg>
+        </button>
+        <button class="icon-btn chevron">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="hover-hint">↑ hover 時同時出現 4 個 icon — 名稱被迫截斷</div>
+  </div>
+</div>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>三點選單（⋯）</h3>
+      <p>分享、重新命名、刪除收進 <strong>⋯</strong> 下拉選單；公開/私人切換仍保留在列上</p>
+
+      <div class="demo-sidebar" style="margin-top:10px;" onclick="event.stopPropagation()">
+        <div class="demo-label">hover 狀態</div>
+        <div class="folder-row" style="position:relative">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="8" width="20" height="12" rx="2" fill="#a86d2c"/>
+            <path d="M2 8a2 2 0 0 1 2-2h4.17a2 2 0 0 1 1.42.59L11 8H2Z" fill="#a86d2c" opacity=".75"/>
+          </svg>
+          <span class="folder-name">深度學習研究論文</span>
+          <div class="right-area">
+            <span class="badge">5</span>
+            <button class="icon-btn active" title="公開">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918"/></svg>
+            </button>
+            <button class="icon-btn" title="更多選項" style="font-size:14px; font-weight:700; color:#8a7860; letter-spacing:1px;">⋯</button>
+            <button class="icon-btn chevron">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
+            </button>
+          </div>
+          <div class="dropdown-mock">
+            <div class="dropdown-item">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/></svg>
+              分享資料夾
+            </div>
+            <div class="dropdown-item">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Z"/></svg>
+              重新命名
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item danger">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916"/></svg>
+              刪除資料夾
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>優點</h4><ul><li>名稱空間最大化</li><li>操作仍清晰可達</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>需要多一次點擊才能操作</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>右鍵選單</h3>
+      <p>列上完全不顯示按鈕；右鍵點擊資料夾列才出現選單（含公開切換、分享、重新命名、刪除）</p>
+
+      <div class="demo-sidebar" style="margin-top:10px;" onclick="event.stopPropagation()">
+        <div class="demo-label">平時狀態（最乾淨）</div>
+        <div class="folder-row">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="8" width="20" height="12" rx="2" fill="#a86d2c"/>
+            <path d="M2 8a2 2 0 0 1 2-2h4.17a2 2 0 0 1 1.42.59L11 8H2Z" fill="#a86d2c" opacity=".75"/>
+          </svg>
+          <span class="folder-name">深度學習研究論文</span>
+          <div class="right-area">
+            <span class="badge">5</span>
+            <span class="ctx-badge">PUBLIC</span>
+            <button class="icon-btn chevron">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="hover-hint">右鍵點擊資料夾列 → 選單</div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>優點</h4><ul><li>UI 最簡潔</li><li>名稱完整顯示</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>操作不易被發現</li><li>觸控裝置不友善</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>公開徽章 ＋ ⋯ 全收進選單</h3>
+      <p>公開/私人改成文字徽章（常駐顯示、不可點擊）；hover 時只出現 <strong>⋯</strong>，所有操作（含切換公開）都在下拉選單</p>
+
+      <div class="demo-sidebar" style="margin-top:10px;" onclick="event.stopPropagation()">
+        <div class="demo-label">hover 狀態</div>
+        <div class="folder-row" style="position:relative">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="8" width="20" height="12" rx="2" fill="#a86d2c"/>
+            <path d="M2 8a2 2 0 0 1 2-2h4.17a2 2 0 0 1 1.42.59L11 8H2Z" fill="#a86d2c" opacity=".75"/>
+          </svg>
+          <span class="folder-name">深度學習研究論文</span>
+          <div class="right-area">
+            <span class="badge">5</span>
+            <span class="ctx-badge">PUBLIC</span>
+            <button class="icon-btn" style="font-size:14px; font-weight:700; color:#8a7860; letter-spacing:1px;">⋯</button>
+            <button class="icon-btn chevron">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7"/></svg>
+            </button>
+          </div>
+          <div class="dropdown-mock">
+            <div class="dropdown-item">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+              改為私人
+            </div>
+            <div class="dropdown-item">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/></svg>
+              分享資料夾
+            </div>
+            <div class="dropdown-item">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Z"/></svg>
+              重新命名
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item danger">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79"/></svg>
+              刪除資料夾
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pros-cons" style="margin-top:8px;">
+        <div class="pros"><h4>優點</h4><ul><li>名稱空間最大化</li><li>公開狀態仍常駐可見</li><li>hover 介面最簡潔</li></ul></div>
+        <div class="cons"><h4>缺點</h4><ul><li>公開切換需多一步</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"C:/Users/KHUser/Desktop/projects/RAG_Knowledge_BASE/.claude/skills\")",
+      "Bash(mv \"C:/Users/KHUser/.claude/commands/secure-code.md\" \"C:/Users/KHUser/Desktop/projects/RAG_Knowledge_BASE/.claude/skills/secure-code.md\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\KHUser\\\\Desktop\\\\projects\\\\RAG_Knowledge_BASE\\\\.claude\\\\commands\")",
+      "Bash(cp \"C:\\\\Users\\\\KHUser\\\\Desktop\\\\projects\\\\RAG_Knowledge_BASE\\\\.claude\\\\skills\\\\frontend-design.md\" \"C:\\\\Users\\\\KHUser\\\\Desktop\\\\projects\\\\RAG_Knowledge_BASE\\\\.claude\\\\commands\\\\frontend-design.md\")",
+      "Bash(cp \"C:\\\\Users\\\\KHUser\\\\Desktop\\\\projects\\\\RAG_Knowledge_BASE\\\\.claude\\\\skills\\\\secure-code.md\" \"C:\\\\Users\\\\KHUser\\\\Desktop\\\\projects\\\\RAG_Knowledge_BASE\\\\.claude\\\\commands\\\\secure-code.md\")",
+      "Bash(python -c \"from app.database import init_db; init_db\\(\\); import sqlite3; c = sqlite3.connect\\('users.db'\\); print\\([r[0] for r in c.execute\\(\\\\\"SELECT name FROM sqlite_master WHERE type='table'\\\\\"\\).fetchall\\(\\)]\\)\")",
+      "Bash(python -c \"from app.main import app; print\\([r.path for r in app.routes if 'conversations' in r.path]\\)\")",
+      "Read(//c/Users/KHUser/Desktop/projects/RAG_Knowledge_BASE/backend/**)",
+      "Bash(python -c ' *)",
+      "Bash(python -c \"from app.main import app; print\\([\\(r.path, list\\(r.methods - {'HEAD'}\\)\\) for r in app.routes if 'conversations' in r.path]\\)\")",
+      "Bash(timeout 15 npx vite build --mode development)",
+      "Bash(npx vite *)",
+      "WebFetch(domain:support.claude.com)",
+      "Bash(pip install *)",
+      "Bash(python *)",
+      "Bash(npm run *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git config *)",
+      "Bash(node *)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/statusline.ps1"
+  }
+}
