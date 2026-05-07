@@ -617,7 +617,7 @@ export default function BookshelfSidebar({
 
           {/* tab switch */}
           <div className="tab-bar w-full mb-3">
-            {[["library", "📚 書架"], ["conversations", "💬 對話"]].map(([key, label]) => (
+            {[["library", "書架"], ["conversations", "對話"]].map(([key, label]) => (
               <button
                 key={key}
                 onClick={() => setSidebarTab(key)}
